@@ -11,6 +11,7 @@ import app.editors.manager.mvp.presenters.main.DocsBasePresenter
 import app.editors.manager.ui.dialogs.explorer.ExplorerContextItem
 import app.editors.manager.ui.popup.MainPopupItem
 import app.editors.manager.ui.popup.SelectPopupItem
+import app.editors.manager.ui.views.custom.PlaceholderViews
 import lib.toolkit.base.managers.utils.UiUtils
 import lib.toolkit.base.ui.dialogs.common.CommonDialog
 
@@ -89,7 +90,7 @@ class DocsTrashFragment : DocsCloudFragment() {
             acceptTitle = getString(R.string.dialogs_question_accept_delete),
             cancelTitle = getString(R.string.dialogs_common_cancel_button),
             acceptErrorTint = true,
-            acceptListener =  {
+            acceptListener = {
                 if (isResumed && isArchive) {
                     cloudPresenter.deleteRoom()
                 } else if (isResumed && section == ApiContract.SectionType.CLOUD_TRASH) {
@@ -138,6 +139,14 @@ class DocsTrashFragment : DocsCloudFragment() {
             SelectPopupItem.Operation.Copy,
             SelectPopupItem.Download
         )
+    }
+
+    override fun onPlaceholder(type: PlaceholderViews.Type) {
+        if (type == PlaceholderViews.Type.EMPTY) {
+            super.onPlaceholder(if (isArchive) PlaceholderViews.Type.EMPTY_ARCHIVE else PlaceholderViews.Type.EMPTY_TRASH)
+        } else {
+            super.onPlaceholder(type)
+        }
     }
 
     private fun showRestoreDialog() {
